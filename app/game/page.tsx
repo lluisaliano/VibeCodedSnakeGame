@@ -149,19 +149,6 @@ export default function GamePage() {
     }
   }, []);
 
-  const sendScore = useCallback(async (finalScore: number) => {
-    const name = localStorage.getItem("snake:name") || "Pilot";
-    try {
-      await fetch("/api/scores", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, score: finalScore })
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
-
   const step = useCallback(() => {
     const snake = snakeRef.current;
     const currentDir = directionRef.current;
@@ -189,7 +176,6 @@ export default function GamePage() {
       stopLoop();
       setStatus("over");
       setMessage("Signal lost. Reboot the run?");
-      sendScore(scoreRef.current);
       return;
     }
 
@@ -204,7 +190,7 @@ export default function GamePage() {
     }
 
     draw();
-  }, [draw, sendScore, stopLoop]);
+  }, [draw, stopLoop]);
 
   const startGame = useCallback(() => {
     const startSnake = [

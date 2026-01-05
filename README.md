@@ -7,8 +7,3 @@
 - `pnpm build`
 - `pnpm start`
 - `pnpm test`
-- `docker compose up -d`
-
-## Environment
-
-- `DATABASE_URL` (see `.env.example`)

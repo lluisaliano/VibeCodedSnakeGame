@@ -1,45 +1,9 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 
-interface ScoreRow {
-  player_name: string;
-  max_score: number;
-  updated_at: string;
-}
-
 export default function MenuPage() {
-  const [scores, setScores] = useState<ScoreRow[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let active = true;
-    fetch("/api/scores")
-      .then((res) => res.json())
-      .then((data) => {
-        if (active) {
-          setScores(data.scores ?? []);
-        }
-      })
-      .catch(() => {
-        if (active) {
-          setScores([]);
-        }
-      })
-      .finally(() => {
-        if (active) {
-          setLoading(false);
-        }
-      });
-    return () => {
-      active = false;
-    };
-  }, []);
-
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col gap-10">
       <header className="flex flex-col gap-4">
@@ -76,33 +40,14 @@ export default function MenuPage() {
         </Card>
 
         <Card className="flex flex-col gap-4">
-          <CardTitle className="text-2xl">Top signal pilots</CardTitle>
+          <CardTitle className="text-2xl">Mission briefing</CardTitle>
           <CardDescription>
-            Highest verified runs stored in the MariaDB vault.
+            Run it locally, share it on Vercel, and challenge your squad.
           </CardDescription>
-          <div className="grid gap-3">
-            {loading && <p className="text-sm text-white/50">Loading…</p>}
-            {!loading && scores.length === 0 && (
-              <p className="text-sm text-white/50">
-                No scores yet. Be the first to spark the grid.
-              </p>
-            )}
-            {scores.map((score, index) => (
-              <div
-                key={`${score.player_name}-${score.max_score}-${index}`}
-                className="flex items-center justify-between rounded-xl border border-white/10 bg-black/30 px-4 py-3"
-              >
-                <div>
-                  <p className="font-display text-sm text-neon">
-                    {index + 1}. {score.player_name}
-                  </p>
-                  <p className="text-xs text-white/40">Max score</p>
-                </div>
-                <p className="font-display text-xl text-neonBlue">
-                  {score.max_score}
-                </p>
-              </div>
-            ))}
+          <div className="grid gap-3 text-sm text-white/70">
+            <p>Survive the grid as long as you can.</p>
+            <p>Grow every time you collect a neon core.</p>
+            <p>Restart anytime to chase a higher score.</p>
           </div>
         </Card>
       </section>
