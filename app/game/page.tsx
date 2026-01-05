@@ -59,6 +59,15 @@ export default function GamePage() {
   const [playerName, setPlayerName] = useState("Pilot");
   const [message, setMessage] = useState<string | null>(null);
   const [showTouchControls, setShowTouchControls] = useState(false);
+  const handleTouchDirection = useCallback(
+    (next: Point) => {
+      nextDirectionRef.current = next;
+      if (status === "idle") {
+        startGame();
+      }
+    },
+    [startGame, status]
+  );
 
   const resizeCanvas = useCallback(() => {
     const container = containerRef.current;
@@ -273,8 +282,50 @@ export default function GamePage() {
       </header>
 
       <section className="grid gap-8 sm:grid-cols-[1.2fr_0.8fr]">
-        <div className="canvas-frame scanline flex flex-col items-center justify-center p-6 touch-none" ref={containerRef}>
-          <canvas ref={canvasRef} className="block" />
+        <div className="flex flex-col items-center gap-4">
+          <div
+            className="canvas-frame scanline flex flex-col items-center justify-center p-6 touch-none"
+            ref={containerRef}
+          >
+            <canvas ref={canvasRef} className="block" />
+          </div>
+          {showTouchControls && (
+            <div className="w-full max-w-[520px] rounded-2xl border border-white/10 bg-black/40 p-4">
+              <p className="text-xs uppercase tracking-[0.3em] text-white/40">
+                Touch controls
+              </p>
+              <div className="mt-4 grid gap-3">
+                <button
+                  type="button"
+                  className="min-h-[64px] rounded-2xl border border-neon/40 bg-neon/10 text-base font-semibold text-neon"
+                  onPointerDown={() => handleTouchDirection({ x: 0, y: -1 })}
+                >
+                  Up
+                </button>
+                <button
+                  type="button"
+                  className="min-h-[64px] rounded-2xl border border-neon/40 bg-neon/10 text-base font-semibold text-neon"
+                  onPointerDown={() => handleTouchDirection({ x: -1, y: 0 })}
+                >
+                  Left
+                </button>
+                <button
+                  type="button"
+                  className="min-h-[64px] rounded-2xl border border-neon/40 bg-neon/10 text-base font-semibold text-neon"
+                  onPointerDown={() => handleTouchDirection({ x: 0, y: 1 })}
+                >
+                  Down
+                </button>
+                <button
+                  type="button"
+                  className="min-h-[64px] rounded-2xl border border-neon/40 bg-neon/10 text-base font-semibold text-neon"
+                  onPointerDown={() => handleTouchDirection({ x: 1, y: 0 })}
+                >
+                  Right
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <Card className="flex flex-col gap-6">
@@ -304,57 +355,6 @@ export default function GamePage() {
               <Link href="/name">Change pilot</Link>
             </Button>
           </div>
-          {showTouchControls && (
-            <div className="mt-2 rounded-2xl border border-white/10 bg-black/40 p-4">
-              <p className="text-xs uppercase tracking-[0.3em] text-white/40">
-                Touch controls
-              </p>
-              <div className="mt-4 grid grid-cols-3 gap-3">
-                <div />
-                <button
-                  type="button"
-                  className="rounded-2xl border border-neon/40 bg-neon/10 py-4 text-sm text-neon"
-                  onPointerDown={() => {
-                    nextDirectionRef.current = { x: 0, y: -1 };
-                    if (status === "idle") startGame();
-                  }}
-                >
-                  Up
-                </button>
-                <div />
-                <button
-                  type="button"
-                  className="rounded-2xl border border-neon/40 bg-neon/10 py-4 text-sm text-neon"
-                  onPointerDown={() => {
-                    nextDirectionRef.current = { x: -1, y: 0 };
-                    if (status === "idle") startGame();
-                  }}
-                >
-                  Left
-                </button>
-                <button
-                  type="button"
-                  className="rounded-2xl border border-neon/40 bg-neon/10 py-4 text-sm text-neon"
-                  onPointerDown={() => {
-                    nextDirectionRef.current = { x: 0, y: 1 };
-                    if (status === "idle") startGame();
-                  }}
-                >
-                  Down
-                </button>
-                <button
-                  type="button"
-                  className="rounded-2xl border border-neon/40 bg-neon/10 py-4 text-sm text-neon"
-                  onPointerDown={() => {
-                    nextDirectionRef.current = { x: 1, y: 0 };
-                    if (status === "idle") startGame();
-                  }}
-                >
-                  Right
-                </button>
-              </div>
-            </div>
-          )}
         </Card>
       </section>
     </main>
