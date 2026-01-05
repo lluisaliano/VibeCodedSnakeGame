@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  mariadb:
+    image: mariadb:11
+    container_name: snakegame-mariadb
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: snake_game
+      MARIADB_USER: snake
+      MARIADB_PASSWORD: snakepass
+      MARIADB_ROOT_PASSWORD: rootpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - snakegame-db:/var/lib/mysql
+
+volumes:
+  snakegame-db:
